@@ -22,7 +22,7 @@ spec:
           name: frontend-app
           imagePullPolicy: Always
           ports:
-            - containerPort: 4200
+            - containerPort: 80
           resources: {}
       restartPolicy: Always
 ---
@@ -35,7 +35,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 4200
+    - port: 80
       targetPort: 80
       nodePort: 32200
   selector:
