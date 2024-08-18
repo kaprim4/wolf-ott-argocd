@@ -18,7 +18,7 @@ spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
-        - image: wolf-ott-frontend:latest
+        - image: alismak/wolf-ott-frontend:latest
           name: frontend-app
           imagePullPolicy: Always
           ports:
