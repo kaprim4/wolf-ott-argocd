@@ -22,7 +22,7 @@ spec:
           name: frontend-app
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 4200
           resources: {}
       restartPolicy: Always
 ---
