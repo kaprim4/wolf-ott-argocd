@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend-app
+  name: frontend-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+        - image: wolf-ott-frontend:latest
+          name: frontend-app
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: frontend-svc
+  name: frontend-svc
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 4200
+      nodePort: 30400
+  selector:
+    app: frontend-app
