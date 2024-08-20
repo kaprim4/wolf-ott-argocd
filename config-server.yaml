@@ -1,48 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: config-server
-  name: config-server
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: config-server
-  strategy: {}
-  template:
-    metadata:
-      labels:
+    labels:
         app: config-server
-    spec:
-      imagePullSecrets:
-        - name: dockerhub-secret
-      containers:
-        - env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: docker
-            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka/
-          image: alismak/config-server:latest
-          name: config-server
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 9000
-          resources: {}
-      restartPolicy: Always
+    name: config-server
+    annotations:
+        argocd.argoproj.io/sync-wave: "0"
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: config-server
+    strategy: { }
+    template:
+        metadata:
+            labels:
+                app: config-server
+        spec:
+            imagePullSecrets:
+                -   name: dockerhub-secret
+            containers:
+                -   env:
+                        -   name: SPRING_PROFILES_ACTIVE
+                            value: docker
+                        -   name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+                            value: http://eureka:8761/eureka/
+                    image: alismak/config-server:latest
+                    name: config-server
+                    imagePullPolicy: Always
+                    ports:
+                        -   containerPort: 9000
+                    resources: { }
+            restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: config-server-svc
-  name: config-server-svc
+    labels:
+        app: config-server-svc
+    name: config-server-svc
 spec:
-  type: ClusterIP
-  ports:
-    - port: 9000
-      targetPort: 9000
-  selector:
-    app: config-server
+    type: ClusterIP
+    ports:
+        -   port: 9000
+            targetPort: 9000
+    selector:
+        app: config-server

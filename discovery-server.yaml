@@ -15,8 +15,8 @@ metadata:
 spec:
     clusterIP: None
     ports:
-        - name: eureka
-          port: 8761
+        -   name: eureka
+            port: 8761
     selector:
         app: eureka
 
@@ -39,34 +39,34 @@ spec:
                 app: eureka
         spec:
             imagePullSecrets:
-                - name: dockerhub-secret
+                -   name: dockerhub-secret
             containers:
-                - name: eureka
-                  image: alismak/discovery-server:latest
-                  imagePullPolicy: Always
-                  ports:
-                      - containerPort: 8761
-                  env:
-                      - name: SPRING_PROFILES_ACTIVE
-                        value: docker
-                      - name: EUREKA_SERVER_ADDRESS
-                        valueFrom:
-                            configMapKeyRef:
-                                name: eureka-cm
-                                key: eureka_address
-                      - name: HOSTNAME
-                        valueFrom:
-                            fieldRef:
-                                fieldPath: metadata.name
+                -   name: eureka
+                    image: alismak/discovery-server:latest
+                    imagePullPolicy: Always
+                    ports:
+                        -   containerPort: 8761
+                    env:
+                        -   name: SPRING_PROFILES_ACTIVE
+                            value: docker
+                        -   name: EUREKA_SERVER_ADDRESS
+                            valueFrom:
+                                configMapKeyRef:
+                                    name: eureka-cm
+                                    key: eureka_address
+                        -   name: HOSTNAME
+                            valueFrom:
+                                fieldRef:
+                                    fieldPath: metadata.name
             restartPolicy: Always
     volumeClaimTemplates:
-        - metadata:
-              name: eureka-storage
-          spec:
-              accessModes: [ "ReadWriteOnce" ]
-              resources:
-                  requests:
-                      storage: 1Gi
+        -   metadata:
+                name: eureka-storage
+            spec:
+                accessModes: [ "ReadWriteOnce" ]
+                resources:
+                    requests:
+                        storage: 1Gi
 
 ---
 apiVersion: v1
@@ -80,6 +80,6 @@ spec:
         app: eureka
     type: NodePort
     ports:
-        - port: 80
-          targetPort: 8761
-          nodePort: 31500
+        -   port: 80
+            targetPort: 8761
+            nodePort: 31500

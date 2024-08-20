@@ -1,50 +1,50 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: gateway-service-app
-  name: gateway-service-app
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    labels:
+        app: gateway-service
+    name: gateway-service
+    annotations:
+        argocd.argoproj.io/sync-wave: "2"
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gateway-service-app
-  strategy: {}
-  template:
-    metadata:
-      labels:
-        app: gateway-service-app
-    spec:
-      imagePullSecrets:
-        - name: dockerhub-secret
-      containers:
-        - env:
-            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
-              value: ' TRACE'
-            - name: SPRING_PROFILES_ACTIVE
-              value: docker
-          image: alismak/gateway-service:latest
-          name: gateway-service-app
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8181
-          resources: {}
-      restartPolicy: Always
+    replicas: 1
+    selector:
+        matchLabels:
+            app: gateway-service
+    strategy: { }
+    template:
+        metadata:
+            labels:
+                app: gateway-service
+        spec:
+            imagePullSecrets:
+                -   name: dockerhub-secret
+            containers:
+                -   env:
+                        -   name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
+                            value: ' TRACE'
+                        -   name: SPRING_PROFILES_ACTIVE
+                            value: docker
+                    image: alismak/gateway-service:latest
+                    name: gateway-service
+                    imagePullPolicy: Always
+                    ports:
+                        -   containerPort: 8181
+                    resources: { }
+            restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: gateway-service-svc
-  name: gateway-service-svc
+    labels:
+        app: gateway-service-svc
+    name: gateway-service-svc
 spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8181
-      nodePort: 30100
-      protocol: TCP
-  selector:
-    app: gateway-service-app
+    type: LoadBalancer
+    ports:
+        -   port: 80
+            targetPort: 8181
+            nodePort: 30100
+            protocol: TCP
+    selector:
+        app: gateway-service
