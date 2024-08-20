@@ -4,6 +4,8 @@ metadata:
   labels:
     app: gateway-service-app
   name: gateway-service-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 1
   selector:
