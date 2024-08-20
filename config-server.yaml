@@ -11,26 +11,26 @@ spec:
     selector:
         matchLabels:
             app: config-server
-    strategy: { }
+    strategy: {}
     template:
         metadata:
             labels:
                 app: config-server
         spec:
             imagePullSecrets:
-                -   name: dockerhub-secret
+                - name: dockerhub-secret
             containers:
-                -   env:
-                        -   name: SPRING_PROFILES_ACTIVE
-                            value: docker
-                        -   name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-                            value: http://eureka:8761/eureka/
-                    image: alismak/config-server:latest
-                    name: config-server
-                    imagePullPolicy: Always
-                    ports:
-                        -   containerPort: 9000
-                    resources: { }
+                - name: config-server
+                  image: alismak/wolf-ott-config-server:latest
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 9000
+                  env:
+                      - name: SPRING_PROFILES_ACTIVE
+                        value: docker
+                      - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+                        value: http://eureka:8761/eureka/
+                  resources: {}
             restartPolicy: Always
 ---
 apiVersion: v1
@@ -42,7 +42,7 @@ metadata:
 spec:
     type: ClusterIP
     ports:
-        -   port: 9000
-            targetPort: 9000
+        - port: 9000
+          targetPort: 9000
     selector:
         app: config-server

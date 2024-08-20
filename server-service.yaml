@@ -29,7 +29,9 @@ spec:
                             value: "yahya"
                         -   name: SPRING_DATASOURCE_PASSWORD
                             value: "yahya"
-                    image: alismak/server-service:latest
+                        -   name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+                            value: http://eureka:8761/eureka/
+                    image: alismak/wolf-ott-server-service:latest
                     name: server-service
                     imagePullPolicy: Always
                     ports:
