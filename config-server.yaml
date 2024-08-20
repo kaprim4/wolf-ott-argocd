@@ -5,7 +5,7 @@ metadata:
         app: config-server
     name: config-server
     annotations:
-        argocd.argoproj.io/sync-wave: "0"
+        argocd.argoproj.io/sync-wave: "1"
 spec:
     replicas: 1
     selector:
