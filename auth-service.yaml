@@ -4,8 +4,6 @@ metadata:
     labels:
         app: auth-service
     name: auth-service
-    annotations:
-        argocd.argoproj.io/sync-wave: "3"
 spec:
     replicas: 3
     selector:

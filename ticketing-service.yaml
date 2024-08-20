@@ -4,8 +4,6 @@ metadata:
     labels:
         app: ticketing-service
     name: ticketing-service
-    annotations:
-        argocd.argoproj.io/sync-wave: "3"
 spec:
     replicas: 3
     selector:
