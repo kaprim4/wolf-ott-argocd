@@ -4,6 +4,8 @@ metadata:
   labels:
     app: epg-service
   name: epg-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 3
   selector:

@@ -28,6 +28,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: eureka
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   serviceName: "eureka"
   replicas: 1
