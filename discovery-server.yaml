@@ -58,9 +58,7 @@ spec:
                   name: eureka-cm
                   key: eureka_address
             - name: HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
+              value: "eureka-0.eureka.svc.cluster.local"
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
