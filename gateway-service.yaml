@@ -23,6 +23,8 @@ spec:
                             value: ' TRACE'
                         -   name: SPRING_PROFILES_ACTIVE
                             value: docker
+                        -   name: SPRING
+                            value: ""
                     image: alismak/wolf-ott-gateway-service:latest
                     name: gateway-service
                     imagePullPolicy: Always

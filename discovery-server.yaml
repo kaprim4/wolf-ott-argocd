@@ -4,29 +4,12 @@ metadata:
     name: eureka-cm
 data:
     eureka_address: "http://eureka.wolf-ott.svc.cluster.local:8761/eureka/"
-
----
-apiVersion: v1
-kind: Service
-metadata:
-    labels:
-        app: eureka
-    name: eureka
-spec:
-    clusterIP: None
-    ports:
-        -   name: eureka
-            port: 8761
-    selector:
-        app: eureka
-
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
     name: eureka
 spec:
-    serviceName: "eureka"
     replicas: 3
     selector:
         matchLabels:
@@ -72,7 +55,7 @@ kind: Service
 metadata:
     labels:
         app: eureka
-    name: eureka-lb
+    name: eureka
 spec:
     selector:
         app: eureka
