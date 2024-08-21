@@ -28,6 +28,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: eureka
+  namespace: wolf-ott
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
@@ -52,13 +53,14 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
-            - name: EUREKA_SERVER_ADDRESS
-              valueFrom:
-                configMapKeyRef:
-                  name: eureka-cm
-                  key: eureka_address
-            - name: HOSTNAME
+            - name: EUREKA_INSTANCE_HOSTNAME
               value: "eureka-0.eureka.svc.cluster.local"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-0.eureka.svc.cluster.local:8761/eureka"
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "true"
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "true"
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
