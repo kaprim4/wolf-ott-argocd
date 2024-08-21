@@ -21,6 +21,11 @@ spec:
         - env:
             - name: SPRING_PROFILES_ACTIVE
               value: docker
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-cm
+                  key: eureka_address
           image: alismak/wolf-ott-server-service:latest
           name: server-service
           imagePullPolicy: Always
