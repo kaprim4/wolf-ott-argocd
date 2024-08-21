@@ -2,34 +2,32 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: gateway-service
-  name: gateway-service
+    app: ticketing-service
+  name: ticketing-service
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: gateway-service
+      app: ticketing-service
   strategy: { }
   template:
     metadata:
       labels:
-        app: gateway-service
+        app: ticketing-service
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
         - env:
-            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
-              value: ' TRACE'
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: http://eureka:8761/eureka/
-          image: alismak/wolf-ott-gateway-service:latest
-          name: gateway-service
+          image: alismak/wolf-ott-ticketing-service:latest
+          name: ticketing-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 8181
+            - containerPort: 9008
           resources: { }
       restartPolicy: Always
 ---
@@ -37,14 +35,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: gateway-service-svc
-  name: gateway-service-svc
+    app: ticketing-service-svc
+  name: ticketing-service-svc
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 80
-      targetPort: 8181
-      nodePort: 30100
-      protocol: TCP
+      targetPort: 9008
   selector:
-    app: gateway-service
+    app: ticketing-service

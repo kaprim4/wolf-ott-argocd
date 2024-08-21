@@ -2,49 +2,48 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: gateway-service
-  name: gateway-service
+    app: notification-service
+  name: notification-service
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: gateway-service
+      app: notification-service
   strategy: { }
   template:
     metadata:
       labels:
-        app: gateway-service
+        app: notification-service
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
         - env:
-            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
-              value: ' TRACE'
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: http://eureka:8761/eureka/
-          image: alismak/wolf-ott-gateway-service:latest
-          name: gateway-service
+          image: alismak/wolf-ott-notification-service:latest
+          name: notification-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 8181
+            - containerPort: 9005
           resources: { }
       restartPolicy: Always
+status: { }
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: gateway-service-svc
-  name: gateway-service-svc
+    app: notification-service-svc
+  name: notification-service-svc
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 80
-      targetPort: 8181
-      nodePort: 30100
-      protocol: TCP
+      targetPort: 9005
   selector:
-    app: gateway-service
+    app: notification-service
+status:
+  loadBalancer: { }

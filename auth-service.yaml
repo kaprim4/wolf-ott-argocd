@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: config-server
-  name: config-server
+    app: auth-service
+  name: auth-service
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: config-server
+      app: auth-service
   strategy: { }
   template:
     metadata:
       labels:
-        app: config-server
+        app: auth-service
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
-        - name: config-server
-          image: alismak/wolf-ott-config-server:latest
+        - name: auth-service-app
+          image: alismak/wolf-ott-auth-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 9000
+            - containerPort: 9001
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
@@ -30,17 +30,20 @@ spec:
               value: http://eureka:8761/eureka/
           resources: { }
       restartPolicy: Always
+status: { }
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: config-server-svc
-  name: config-server-svc
+    app: auth-service-svc
+  name: auth-service-svc
 spec:
   type: ClusterIP
   ports:
-    - port: 9000
-      targetPort: 9000
+    - port: 80
+      targetPort: 9001
   selector:
-    app: config-server
+    app: auth-service
+status:
+  loadBalancer: { }

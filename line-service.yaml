@@ -4,8 +4,6 @@ metadata:
   labels:
     app: line-service
   name: line-service
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 3
   selector:
@@ -24,10 +22,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              valueFrom:
-                configMapKeyRef:
-                  name: eureka-cm
-                  key: eureka_address
+              value: http://eureka:8761/eureka/
           image: alismak/wolf-ott-line-service:latest
           name: line-service
           imagePullPolicy: Always
