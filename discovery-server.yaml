@@ -10,7 +10,7 @@ kind: Deployment
 metadata:
     name: eureka
 spec:
-    replicas: 3
+    replicas: 1
     selector:
         matchLabels:
             app: eureka
@@ -40,15 +40,6 @@ spec:
                                 fieldRef:
                                     fieldPath: metadata.name
             restartPolicy: Always
-    volumeClaimTemplates:
-        -   metadata:
-                name: eureka-storage
-            spec:
-                accessModes: [ "ReadWriteOnce" ]
-                resources:
-                    requests:
-                        storage: 1Gi
-
 ---
 apiVersion: v1
 kind: Service
