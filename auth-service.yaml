@@ -26,6 +26,12 @@ spec:
                   env:
                       - name: SPRING_PROFILES_ACTIVE
                         value: docker
+                      - name: SPRING_DATASOURCE_URL
+                        value: jdbc:mysql://212.237.231.147:32306/xui
+                      - name: SPRING_DATASOURCE_USERNAME
+                        value: "yahya"
+                      - name: SPRING_DATASOURCE_PASSWORD
+                        value: "yahya"
                   resources: {}
             restartPolicy: Always
 status: {}
