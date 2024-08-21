@@ -1,44 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    labels:
-        app: line-service
-    name: line-service
+  labels:
+    app: line-service
+  name: line-service
 spec:
-    replicas: 3
-    selector:
-        matchLabels:
-            app: line-service
-    strategy: { }
-    template:
-        metadata:
-            labels:
-                app: line-service
-        spec:
-            imagePullSecrets:
-                -   name: dockerhub-secret
-            containers:
-                -   env:
-                        -   name: SPRING_PROFILES_ACTIVE
-                            value: docker
-                    image: alismak/wolf-ott-line-service:latest
-                    name: line-service
-                    imagePullPolicy: Always
-                    ports:
-                        -   containerPort: 9004
-                    resources: { }
-            restartPolicy: Always
+  replicas: 3
+  selector:
+    matchLabels:
+      app: line-service
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: line-service
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: alismak/wolf-ott-line-service:latest
+          name: line-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9004
+          resources: { }
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    labels:
-        app: line-service-svc
-    name: line-service-svc
+  labels:
+    app: line-service-svc
+  name: line-service-svc
 spec:
-    type: ClusterIP
-    ports:
-        -   port: 80
-            targetPort: 9004
-    selector:
-        app: line-service
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 9004
+  selector:
+    app: line-service

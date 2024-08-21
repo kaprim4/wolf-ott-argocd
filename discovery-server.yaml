@@ -1,57 +1,65 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: eureka-cm
+  name: eureka-config
 data:
-    eureka_address: "http://eureka.wolf-ott.svc.cluster.local:8761/eureka/"
+  application.yml: |
+    spring:
+      application:
+        name: eureka
+      cloud:
+        config:
+          uri: http://config-server:9000
+        eureka:
+          client:
+            service-url:
+              defaultZone: http://eureka:8761/eureka/
+            fetch-registry: false
+            register-with-eureka: false
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: eureka
+  name: eureka
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app: eureka
-    template:
-        metadata:
-            labels:
-                app: eureka
-        spec:
-            imagePullSecrets:
-                -   name: dockerhub-secret
-            containers:
-                -   name: eureka
-                    image: alismak/wolf-ott-discovery-server:latest
-                    imagePullPolicy: Always
-                    ports:
-                        -   containerPort: 8761
-                    env:
-                        -   name: SPRING_PROFILES_ACTIVE
-                            value: docker
-                        -   name: EUREKA_SERVER_ADDRESS
-                            valueFrom:
-                                configMapKeyRef:
-                                    name: eureka-cm
-                                    key: eureka_address
-                        -   name: HOSTNAME
-                            valueFrom:
-                                fieldRef:
-                                    fieldPath: metadata.name
-            restartPolicy: Always
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - name: eureka
+          image: alismak/wolf-ott-discovery-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8761
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+            - name: CONFIG_SERVER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-config
+                  key: spring.cloud.config.uri
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    labels:
-        app: eureka
-    name: eureka
+  labels:
+    app: eureka
+  name: eureka
 spec:
-    selector:
-        app: eureka
-    type: NodePort
-    ports:
-        -   port: 80
-            targetPort: 8761
-            nodePort: 31500
+  selector:
+    app: eureka
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 8761
+      nodePort: 31500

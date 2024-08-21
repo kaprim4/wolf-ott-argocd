@@ -1,44 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    labels:
-        app: device-service
-    name: device-service
+  labels:
+    app: device-service
+  name: device-service
 spec:
-    replicas: 3
-    selector:
-        matchLabels:
-            app: device-service
-    strategy: { }
-    template:
-        metadata:
-            labels:
-                app: device-service
-        spec:
-            imagePullSecrets:
-                -   name: dockerhub-secret
-            containers:
-                -   name: device-service
-                    image: alismak/wolf-ott-device-service:latest
-                    imagePullPolicy: Always
-                    ports:
-                        -   containerPort: 9002
-                    env:
-                        -   name: SPRING_PROFILES_ACTIVE
-                            value: docker
-                    resources: { }
-            restartPolicy: Always
+  replicas: 3
+  selector:
+    matchLabels:
+      app: device-service
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: device-service
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - name: device-service
+          image: alismak/wolf-ott-device-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9002
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          resources: { }
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    labels:
-        app: device-service-svc
-    name: device-service-svc
+  labels:
+    app: device-service-svc
+  name: device-service-svc
 spec:
-    type: ClusterIP
-    ports:
-        -   port: 80
-            targetPort: 9002
-    selector:
-        app: device-service
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 9002
+  selector:
+    app: device-service
