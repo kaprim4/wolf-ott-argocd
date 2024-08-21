@@ -21,12 +21,6 @@ spec:
                 -   env:
                         -   name: SPRING_PROFILES_ACTIVE
                             value: docker
-                        -   name: SPRING_DATASOURCE_URL
-                            value: jdbc:mysql://mysql:3306/xui
-                        -   name: SPRING_DATASOURCE_USERNAME
-                            value: "yahya"
-                        -   name: SPRING_DATASOURCE_PASSWORD
-                            value: "yahya"
                         -   name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
                             value: http://eureka:8761/eureka/
                     image: alismak/wolf-ott-server-service:latest

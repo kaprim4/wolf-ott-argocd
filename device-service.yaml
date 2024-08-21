@@ -9,32 +9,26 @@ spec:
     selector:
         matchLabels:
             app: device-service
-    strategy: {}
+    strategy: { }
     template:
         metadata:
             labels:
                 app: device-service
         spec:
             imagePullSecrets:
-                - name: dockerhub-secret
+                -   name: dockerhub-secret
             containers:
-                - name: device-service
-                  image: alismak/wolf-ott-device-service:latest
-                  imagePullPolicy: Always
-                  ports:
-                      - containerPort: 9002
-                  env:
-                      - name: SPRING_PROFILES_ACTIVE
-                        value: docker
-                      - name: SPRING_DATASOURCE_URL
-                        value: jdbc:mysql://mysql:3306/xui
-                      - name: SPRING_DATASOURCE_USERNAME
-                        value: "yahya"
-                      - name: SPRING_DATASOURCE_PASSWORD
-                        value: "yahya"
-                      - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-                        value: http://eureka:8761/eureka/
-                  resources: {}
+                -   name: device-service
+                    image: alismak/wolf-ott-device-service:latest
+                    imagePullPolicy: Always
+                    ports:
+                        -   containerPort: 9002
+                    env:
+                        -   name: SPRING_PROFILES_ACTIVE
+                            value: docker
+                        -   name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+                            value: http://eureka:8761/eureka/
+                    resources: { }
             restartPolicy: Always
 ---
 apiVersion: v1
@@ -46,7 +40,7 @@ metadata:
 spec:
     type: ClusterIP
     ports:
-        - port: 80
-          targetPort: 9002
+        -   port: 80
+            targetPort: 9002
     selector:
         app: device-service
