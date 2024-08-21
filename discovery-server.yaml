@@ -1,27 +1,32 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: eureka-config
+  name: eureka-cm
 data:
-  application-docker.yml: |
-    spring:
-      application:
-        name: eureka
-      cloud:
-        config:
-          uri: http://config-server:9000
-        eureka:
-          client:
-            service-url:
-              defaultZone: http://eureka:8761/eureka/
-            fetch-registry: false
-            register-with-eureka: false
+  eureka_address: "http://eureka-0.eureka.svc.cluster.local:8761/eureka"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eureka
+  name: eureka
+spec:
+  clusterIP: None
+  ports:
+    - name: eureka
+      port: 8761
+  selector:
+    app: eureka
+
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: eureka
 spec:
+  serviceName: "eureka"
   replicas: 1
   selector:
     matchLabels:
@@ -32,7 +37,7 @@ spec:
         app: eureka
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret
+        - name: docker-registry-secret
       containers:
         - name: eureka
           image: alismak/wolf-ott-discovery-server:latest
@@ -41,20 +46,33 @@ spec:
             - containerPort: 8761
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: docker
-            - name: CONFIG_SERVER_URI
+              value: default
+            - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
-                  name: eureka-config
-                  key: spring.cloud.config.uri
+                  name: eureka-cm
+                  key: eureka_address
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
       restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: eureka-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: eureka
-  name: eureka
+  name: eureka-lb
 spec:
   selector:
     app: eureka
