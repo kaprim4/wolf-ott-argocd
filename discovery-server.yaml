@@ -4,10 +4,7 @@ metadata:
   name: eureka-cm
   namespace: wolf-ott
 data:
-  eureka_address: |
-    http://eureka-0.eureka.wolf-ott.svc.cluster.local:8761/eureka,
-    http://eureka-1.eureka.wolf-ott.svc.cluster.local:8761/eureka,
-    http://eureka-2.eureka.wolf-ott.svc.cluster.local:8761/eureka
+  eureka_address: "http://eureka:8761/eureka"
 
 ---
 apiVersion: v1
