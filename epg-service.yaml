@@ -20,7 +20,7 @@ spec:
       containers:
         - env:
             - name: SPRING_PROFILES_ACTIVE
-              value: docker
+              value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:
                 configMapKeyRef:

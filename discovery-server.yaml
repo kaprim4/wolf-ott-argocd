@@ -49,7 +49,7 @@ spec:
             - containerPort: 8761
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: default
+              value: "docker"
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:

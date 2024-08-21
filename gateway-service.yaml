@@ -22,7 +22,7 @@ spec:
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
               value: ' TRACE'
             - name: SPRING_PROFILES_ACTIVE
-              value: docker
+              value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:
                 configMapKeyRef:
