@@ -26,6 +26,11 @@ spec:
                 configMapKeyRef:
                   name: eureka-cm
                   key: eureka_address
+            - name: HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-cm
+                  key: eureka_instance
           image: alismak/wolf-ott-user-service:latest
           name: user-service
           imagePullPolicy: Always
