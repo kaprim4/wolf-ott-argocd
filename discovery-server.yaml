@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: discovery-server-cm
 data:
-  discovery-server_address: "http://discovery-server:8761/eureka"
+  discovery-server_address: "http://212.237.231.147:31500/eureka"
 
 ---
 apiVersion: v1
