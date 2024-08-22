@@ -8,6 +8,8 @@ spec:
     - name: http
       port: 8761
       targetPort: 8761
+      nodePort: 31500
+  type: NodePort
   selector:
     app: eureka-discovery
 ---
@@ -60,7 +62,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: eureka.local
+    - host: eureka.wolf-ott.svc.cluster.local
       http:
         paths:
           - path: /
