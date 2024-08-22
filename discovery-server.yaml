@@ -1,85 +1,83 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: eureka-config
-  namespace: wolf-ott
+  name: eureka-cm
 data:
-  application.properties: |
-    server.port=8761
-    eureka.instance.hostname=eureka-server.local
-    eureka.client.register-with-eureka=false
-    eureka.client.fetch-registry=false
-    eureka.client.service-url.defaultZone=http://eureka-server.local:8761/eureka/
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: eureka-server
-  namespace: wolf-ott
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: eureka-server
-  template:
-    metadata:
-      labels:
-        app: eureka-server
-    spec:
-      containers:
-        - name: eureka
-          image: alismak/wolf-ott-discovery-server:latest
-          ports:
-            - containerPort: 8761
-          env:
-            - name: EUREKA_INSTANCE_HOSTNAME
-              value: "eureka-server.local"
-            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: "http://eureka-server.local:8761/eureka/"
-            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
-              value: "false"
-            - name: EUREKA_CLIENT_FETCH_REGISTRY
-              value: "false"
-          volumeMounts:
-            - name: eureka-config
-              mountPath: /config
-      volumes:
-        - name: eureka-config
-          configMap:
-            name: eureka-config
+  eureka_address: "http://eureka-0.eureka.svc.cluster.local:8761/eureka"
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: eureka-service
-  namespace: wolf-ott
+  labels:
+    app: eureka
+  name: eureka
+spec:
+  clusterIP: None
+  ports:
+    - name: eureka
+      port: 8761
+  selector:
+    app: eureka
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka
+spec:
+  serviceName: "eureka"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+        - name: eureka
+          image: alismak/wolf-ott-discovery-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8761
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: eureka-cm
+                  key: eureka_address
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: eureka-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eureka
+  name: eureka-lb
 spec:
   selector:
-    app: eureka-server
-  ports:
-    - protocol: TCP
-      port: 8761
-      targetPort: 8761
-      nodePort: 31500  # Define NodePort here
+    app: eureka
   type: NodePort
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: eureka-ingress
-  namespace: wolf-ott
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  rules:
-    - host: eureka-server.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: eureka-service
-                port:
-                  number: 8761
+  ports:
+    - port: 80
+      targetPort: 8761
+      nodePort: 31500
