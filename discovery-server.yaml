@@ -8,6 +8,8 @@ spec:
     - name: http
       port: 8761
       targetPort: 8761
+      nodePort: 31500
+  type: NodePort
   selector:
     app: eureka-discovery
 ---
@@ -50,23 +52,3 @@ spec:
               port: 8761
             initialDelaySeconds: 10
             periodSeconds: 20
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: eureka-discovery-ingress
-  namespace: wolf-ott
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-    - host: eureka.wolf-ott.svc.cluster.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: eureka-discovery-service
-                port:
-                  number: 8761
