@@ -37,7 +37,7 @@ spec:
         app: eureka
     spec:
       imagePullSecrets:
-        - name: docker-registry-secret
+        - name: dockerhub-secret
       containers:
         - name: eureka
           image: alismak/wolf-ott-discovery-server:latest
