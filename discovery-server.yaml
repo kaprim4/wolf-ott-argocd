@@ -1,83 +1,72 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: eureka-cm
-data:
-  eureka_address: "http://eureka.wolf-ott.svc.cluster.local:8761/eureka/"
-
----
-apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: eureka
-  name: eureka
+  name: eureka-discovery-service
+  namespace: wolf-ott
 spec:
-  clusterIP: None
   ports:
-    - name: eureka
+    - name: http
       port: 8761
+      targetPort: 8761
   selector:
-    app: eureka
-
+    app: eureka-discovery
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: eureka
+  name: eureka-discovery-deployment
+  namespace: wolf-ott
 spec:
-  serviceName: "eureka"
   replicas: 1
   selector:
     matchLabels:
-      app: eureka
+      app: eureka-discovery
   template:
     metadata:
       labels:
-        app: eureka
+        app: eureka-discovery
     spec:
-      imagePullSecrets:
-        - name: dockerhub-secret
       containers:
-        - name: eureka
-          image: alismak/wolf-ott-discovery-server:latest
-          imagePullPolicy: Always
+        - name: eureka-discovery
+          image: springcloud/eureka:latest
           ports:
             - containerPort: 8761
           env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "docker"
-            - name: EUREKA_SERVER_ADDRESS
-              valueFrom:
-                configMapKeyRef:
-                  name: eureka-cm
-                  key: eureka_address
-            - name: HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-      restartPolicy: Always
-  volumeClaimTemplates:
-    - metadata:
-        name: eureka-storage
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 1Gi
-
+            - name: EUREKA_INSTANCE_HOSTNAME
+              value: "eureka-discovery-service"
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "false"
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "false"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 10
+            periodSeconds: 20
 ---
-apiVersion: v1
-kind: Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  labels:
-    app: eureka
-  name: eureka-lb
+  name: eureka-discovery-ingress
+  namespace: wolf-ott
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  selector:
-    app: eureka
-  type: NodePort
-  ports:
-    - port: 80
-      targetPort: 8761
-      nodePort: 31600
+  rules:
+    - host: eureka.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eureka-discovery-service
+                port:
+                  number: 8761
