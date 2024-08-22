@@ -24,7 +24,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka/
+              value: http://eureka.wolf-ott.svc.cluster.local:8761/eureka/
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-svc.wolf-ott.svc.cluster.local:3306/xui
             - name: SPRING_DATASOURCE_USERNAME
