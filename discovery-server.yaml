@@ -8,8 +8,6 @@ spec:
     - name: http
       port: 8761
       targetPort: 8761
-      nodePort: 31500
-  type: NodePort
   selector:
     app: eureka-discovery
 ---
