@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: eureka-cm
 data:
-  eureka_address: "http://eureka.wolf-ott.svc.cluster.local:8761/eureka"
+  eureka_address: "http://eureka-0.eureka.svc.cluster.local:8761/eureka"
 
 ---
 apiVersion: v1
