@@ -40,7 +40,7 @@ spec:
         - name: dockerhub-secret
       containers:
         - name: eureka
-          image: 172.24.114.27:5000/discovery-server:latest
+          image: alismak/wolf-ott-discovery-server:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8761
