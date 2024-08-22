@@ -2,23 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: user-service
-  name: user-service
+    app: device-service
+  name: device-service
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: user-service
+      app: device-service
   strategy: { }
   template:
     metadata:
       labels:
-        app: user-service
+        app: device-service
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
-        - env:
+        - name: device-service
+          image: alismak/wolf-ott-device-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9002
+          env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
@@ -29,11 +34,6 @@ spec:
               value: "yahya"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "yahya"
-          image: alismak/wolf-ott-user-service:latest
-          name: user-service
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 9009
           resources: { }
       restartPolicy: Always
 ---
@@ -41,12 +41,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: user-service-svc
-  name: user-service-svc
+    app: device-service-svc
+  name: device-service-svc
 spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 9009
+      targetPort: 9002
   selector:
-    app: user-service
+    app: device-service

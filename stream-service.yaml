@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: user-service
-  name: user-service
+    app: stream-service
+  name: stream-service
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: user-service
+      app: stream-service
   strategy: { }
   template:
     metadata:
       labels:
-        app: user-service
+        app: stream-service
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
@@ -29,11 +29,11 @@ spec:
               value: "yahya"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "yahya"
-          image: alismak/wolf-ott-user-service:latest
-          name: user-service
+          image: alismak/wolf-ott-stream-service:latest
+          name: stream-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 9009
+            - containerPort: 9007
           resources: { }
       restartPolicy: Always
 ---
@@ -41,12 +41,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: user-service-svc
-  name: user-service-svc
+    app: stream-service-svc
+  name: stream-service-svc
 spec:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 9009
+      targetPort: 9007
   selector:
-    app: user-service
+    app: stream-service
