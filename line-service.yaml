@@ -24,8 +24,8 @@ spec:
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
-                  name: discovery-server-cm
-                  key: discovery-server_address
+                  name: eureka-cm
+                  key: eureka_address
           image: alismak/wolf-ott-line-service:latest
           name: line-service
           imagePullPolicy: Always
