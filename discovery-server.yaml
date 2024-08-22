@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: discovery-server-cm
 data:
-  discovery-server_address: "http://discovery-server-0.discovery-server.wolf-ott.svc.cluster.local:8761/discovery-server"
+  discovery-server_address: "http://discovery-server-0.discovery-server.wolf-ott.svc.cluster.local:8761/eureka"
 
 ---
 apiVersion: v1
