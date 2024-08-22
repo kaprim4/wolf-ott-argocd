@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: eureka-discovery
-          image: springcloud/eureka:latest
+          image: alismak/wolf-ott-discovery-server:latest
           ports:
             - containerPort: 8761
           env:
