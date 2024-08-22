@@ -1,45 +1,45 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: eureka-cm
+  name: discovery-server-cm
 data:
-  eureka_address: "http://eureka-0.eureka.wolf-ott.svc.cluster.local:8761/eureka"
+  discovery-server_address: "http://discovery-server-0.discovery-server.wolf-ott.svc.cluster.local:8761/discovery-server"
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: eureka
-  name: eureka
+    app: discovery-server
+  name: discovery-server
 spec:
   clusterIP: None
   ports:
-    - name: eureka
+    - name: discovery-server
       port: 8761
   selector:
-    app: eureka
+    app: discovery-server
 
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: eureka
+  name: discovery-server
 spec:
-  serviceName: "eureka"
+  serviceName: "discovery-server"
   replicas: 1
   selector:
     matchLabels:
-      app: eureka
+      app: discovery-server
   template:
     metadata:
       labels:
-        app: eureka
+        app: discovery-server
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
-        - name: eureka
+        - name: discovery-server
           image: alismak/wolf-ott-discovery-server:latest
           imagePullPolicy: Always
           ports:
@@ -50,8 +50,8 @@ spec:
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
-                  name: eureka-cm
-                  key: eureka_address
+                  name: discovery-server-cm
+                  key: discovery-server_address
             - name: HOSTNAME
               valueFrom:
                 fieldRef:
@@ -59,7 +59,7 @@ spec:
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
-        name: eureka-storage
+        name: discovery-server-storage
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
@@ -71,11 +71,11 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: eureka
-  name: eureka-lb
+    app: discovery-server
+  name: discovery-server-lb
 spec:
   selector:
-    app: eureka
+    app: discovery-server
   type: NodePort
   ports:
     - port: 80

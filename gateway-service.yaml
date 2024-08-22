@@ -23,8 +23,11 @@ spec:
               value: ' TRACE'
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
-            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: http://eureka:8761/eureka/
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: discovery-server-cm
+                  key: discovery-server_address
           image: alismak/wolf-ott-gateway-service:latest
           name: gateway-service
           imagePullPolicy: Always
