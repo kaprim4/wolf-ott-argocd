@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: eureka-cm
 data:
-  eureka_address: "http://eureka-0.eureka.svc.cluster.local:8761/eureka"
+  eureka_address: "http://localhost:8761/eureka"
 
 ---
 apiVersion: v1
@@ -53,9 +53,7 @@ spec:
                   name: eureka-cm
                   key: eureka_address
             - name: HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
+              value: localhost
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
