@@ -1,42 +1,81 @@
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: eureka-discovery-service
-  namespace: wolf-ott
-spec:
-  ports:
-    - name: http
-      port: 8761
-      targetPort: 8761
-      nodePort: 31500
-  type: NodePort
-  selector:
-    app: eureka-discovery
+  name: eureka-config
+  namespace: eureka
+data:
+  application.properties: |
+    server.port=8761
+    eureka.instance.hostname=eureka-server.local
+    eureka.client.register-with-eureka=false
+    eureka.client.fetch-registry=false
+    eureka.client.service-url.defaultZone=http://eureka-server.local:8761/eureka/
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eureka-discovery-deployment
-  namespace: wolf-ott
+  name: eureka-server
+  namespace: eureka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: eureka-discovery
+      app: eureka-server
   template:
     metadata:
       labels:
-        app: eureka-discovery
+        app: eureka-server
     spec:
       containers:
-        - name: eureka-discovery
-          image: alismak/wolf-ott-discovery-server:latest
+        - name: eureka
+          image: springcloud/spring-cloud-netflix-eureka-server
           ports:
             - containerPort: 8761
           env:
-            - name: EUREKA_INSTANCE_HOSTNAME
-              value: "eureka-discovery-service"
             - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
               value: "false"
             - name: EUREKA_CLIENT_FETCH_REGISTRY
               value: "false"
+          volumeMounts:
+            - name: eureka-config
+              mountPath: /config
+      volumes:
+        - name: eureka-config
+          configMap:
+            name: eureka-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-service
+  namespace: eureka
+spec:
+  selector:
+    app: eureka-server
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
+      nodePort: 31500  # Define NodePort here
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eureka-ingress
+  namespace: eureka
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: eureka-server.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eureka-service
+                port:
+                  number: 8761
