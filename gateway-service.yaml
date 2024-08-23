@@ -39,6 +39,8 @@ metadata:
   labels:
     app: gateway-service-svc
   name: gateway-service-svc
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   type: LoadBalancer
   ports:
