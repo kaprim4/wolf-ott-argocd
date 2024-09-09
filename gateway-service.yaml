@@ -2,35 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: gateway-service
-  name: gateway-service
+    app: gateway-service-app
+  name: gateway-service-app
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gateway-service
-  strategy: { }
+      app: gateway-service-app
+  strategy: {}
   template:
     metadata:
       labels:
-        app: gateway-service
+        app: gateway-service-app
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret
+        - name: docker-registry-secret
       containers:
         - env:
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
               value: ' TRACE'
             - name: SPRING_PROFILES_ACTIVE
-              value: "docker"
+              value: docker
           image: alismak/wolf-ott-gateway-service:latest
-          name: gateway-service
+          name: gateway-service-app
           imagePullPolicy: Always
           ports:
             - containerPort: 8181
-          resources: { }
+          resources: {}
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -42,10 +42,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 80
       targetPort: 8181
       nodePort: 30100
+      protocol: TCP
   selector:
-    app: gateway-service
+    app: gateway-service-app
+
