@@ -29,7 +29,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql-svc.wolf-ott.svc.cluster.local:3306/xui
+              value: jdbc:mysql://212.237.231.147:3306/xui
             - name: SPRING_DATASOURCE_USERNAME
               value: "yahya"
             - name: SPRING_DATASOURCE_PASSWORD
