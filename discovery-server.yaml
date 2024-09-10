@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: eureka-cm
 data:
-  eureka_address: "http://eureka.wolf-ott.svc.cluster.local:8761/eureka"
+  eureka_address: "http://eureka-0.eureka.svc.cluster.local:8761/eureka"
 
 ---
 apiVersion: v1
@@ -25,8 +25,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: eureka
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   serviceName: "eureka"
   replicas: 1
@@ -39,7 +37,7 @@ spec:
         app: eureka
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret
+        - name: docker-registry-secret
       containers:
         - name: eureka
           image: alismak/wolf-ott-discovery-server:latest
@@ -48,7 +46,7 @@ spec:
             - containerPort: 8761
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "docker"
+              value: default
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
