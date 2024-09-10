@@ -16,7 +16,7 @@ spec:
         app: config-server
     spec:
       imagePullSecrets:
-        - name: docker-registry-secret
+        - name: dockerhub-secret
       containers:
         - env:
             - name: SPRING_PROFILES_ACTIVE

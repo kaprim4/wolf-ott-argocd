@@ -16,7 +16,7 @@ spec:
         app: gateway-service-app
     spec:
       imagePullSecrets:
-        - name: docker-registry-secret
+        - name: dockerhub-secret
       containers:
         - env:
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
@@ -46,4 +46,3 @@ spec:
       protocol: TCP
   selector:
     app: gateway-service-app
-
