@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: gateway-service-app
-  name: gateway-service-app
+    app: gateway-service
+  name: gateway-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gateway-service-app
+      app: gateway-service
   strategy: {}
   template:
     metadata:
       labels:
-        app: gateway-service-app
+        app: gateway-service
     spec:
       imagePullSecrets:
         - name: dockerhub-secret
@@ -24,7 +24,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: docker
           image: alismak/wolf-ott-gateway-service:latest
-          name: gateway-service-app
+          name: gateway-service
           imagePullPolicy: Always
           ports:
             - containerPort: 8181
@@ -45,4 +45,4 @@ spec:
       nodePort: 30100
       protocol: TCP
   selector:
-    app: gateway-service-app
+    app: gateway-service
