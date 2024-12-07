@@ -28,7 +28,15 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8181
+          volumeMounts:
+          - name: keystore-volume
+            mountPath: /etc/ssl/keystore
+            readOnly: true
           resources: {}
+      volumes:
+      - name: keystore-volume
+        secret:
+          secretName: gateway-tls-secret
       restartPolicy: Always
 ---
 apiVersion: v1
