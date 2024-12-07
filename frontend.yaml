@@ -33,7 +33,7 @@ metadata:
     app: frontend-svc
   name: frontend-svc
 spec:
-  type: ClusterIp
+  type: ClusterIP
   ports:
     - port: 80
       targetPort: 4200
