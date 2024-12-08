@@ -46,11 +46,10 @@ metadata:
     app: gateway-service-svc
   name: gateway-service-svc
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80
       targetPort: 8181
-      nodePort: 30100
       protocol: TCP
   selector:
     app: gateway-service
