@@ -16,17 +16,26 @@ spec:
                 app: user-service
         spec:
             imagePullSecrets:
-                -   name: dockerhub-secret
+                - name: dockerhub-secret
             containers:
-                -   env:
-                        -   name: SPRING_PROFILES_ACTIVE
-                            value: "docker"
-                        -   name: SPRING_DATASOURCE_URL
-                            value: jdbc:mysql://212.237.231.147:3306/xui
-                        -   name: SPRING_DATASOURCE_USERNAME
-                            value: "yahya"
-                        -   name: SPRING_DATASOURCE_PASSWORD
-                            value: "yahya"
+                - env:
+                        - name: SPRING_PROFILES_ACTIVE
+                        value: "docker"
+                - name: SPRING_DATASOURCE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: wolf-ott-configmap
+                      key: connection_string
+                - name: SPRING_DATASOURCE_USERNAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: wolf-ott-configmap
+                      key: connection_username
+                - name: SPRING_DATASOURCE_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: wolf-ott-configmap
+                      key: connection_password 
                     image: alismak/wolf-ott-user-service:latest
                     name: user-service
                     imagePullPolicy: Always
