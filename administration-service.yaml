@@ -22,20 +22,20 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: SPRING_DATASOURCE_URL
-                valueFrom:
-                  configMapKeyRef:
-                    name: wolf-ott-configmap
-                    key: connection_string
+              valueFrom:
+                configMapKeyRef:
+                  name: wolf-ott-configmap
+                  key: connection_string
             - name: SPRING_DATASOURCE_USERNAME
-                valueFrom:
-                  configMapKeyRef:
-                    name: wolf-ott-configmap
-                    key: connection_username
-              - name: SPRING_DATASOURCE_PASSWORD
-                valueFrom:
-                  configMapKeyRef:
-                    name: wolf-ott-configmap
-                    key: connection_password  
+              valueFrom:
+                configMapKeyRef:
+                  name: wolf-ott-configmap
+                  key: connection_username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: wolf-ott-configmap
+                  key: connection_password 
           image: alismak/wolf-ott-administration-service:latest
           name: administration-service
           imagePullPolicy: Always
