@@ -27,11 +27,20 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://212.237.231.147:3306/xui
+                valueFrom:
+                  configMapKeyRef:
+                    name: wolf-ott-configmap
+                    key: connection_string
             - name: SPRING_DATASOURCE_USERNAME
-              value: "yahya"
-            - name: SPRING_DATASOURCE_PASSWORD
-              value: "yahya"
+                valueFrom:
+                  configMapKeyRef:
+                    name: wolf-ott-configmap
+                    key: connection_username
+              - name: SPRING_DATASOURCE_PASSWORD
+                valueFrom:
+                  configMapKeyRef:
+                    name: wolf-ott-configmap
+                    key: connection_password 
           resources: { }
       restartPolicy: Always
 status: { }
