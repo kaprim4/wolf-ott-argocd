@@ -35,7 +35,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: wolf-ott-configmap
-                  key: connection_password 
+                  key: connection_password
           image: alismak/wolf-ott-stream-service:latest
           name: stream-service
           imagePullPolicy: Always
