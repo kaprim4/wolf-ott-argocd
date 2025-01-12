@@ -44,6 +44,12 @@ spec:
         - name: eureka
           image: alismak/wolf-ott-discovery-server:latest
           imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30 # Attente avant de vérifier la santé
+            periodSeconds: 10
           ports:
             - containerPort: 8761
           env:
