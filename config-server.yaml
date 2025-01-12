@@ -27,6 +27,12 @@ spec:
               value: http://eureka:8761/eureka/
           image: alismak/wolf-ott-config-server:latest
           name: config-server
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9000
+            initialDelaySeconds: 30 # Attente avant de vérifier la santé
+            periodSeconds: 10
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
